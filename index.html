@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abrir Chamado no Planner</title>
+  <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 16px; }
+    label { display: block; margin-top: 14px; font-weight: 600; }
+    input, textarea, select, button { width: 100%; padding: 10px; margin-top: 6px; box-sizing: border-box; }
+    button { cursor: pointer; font-weight: 600; }
+    #status { margin-top: 16px; white-space: pre-wrap; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>Novo Chamado (Planner)</h1>
+
+  <button id="btnLogin" type="button">Entrar com Microsoft 365</button>
+
+  <form id="chamadoForm" style="display:none;">
+    <label for="titulo">Título do chamado</label>
+    <input id="titulo" type="text" required placeholder="Ex.: Erro ao acessar sistema financeiro" />
+
+    <label for="descricao">Descrição</label>
+    <textarea id="descricao" rows="4" required placeholder="Detalhe o problema ocorrido..."></textarea>
+
+    <label for="categoria">Categoria (Bucket)</label>
+    <select id="categoria" required>
+      <option value="">Carregando buckets...</option>
+    </select>
+
+    <label for="evidenciaUrl">Evidência (URL do arquivo/print no SharePoint/OneDrive ou link)</label>
+    <input id="evidenciaUrl" type="url" placeholder="https://..." />
+
+    <label for="evidenciaAlias">Nome da evidência</label>
+    <input id="evidenciaAlias" type="text" placeholder="Ex.: print-erro.png" />
+
+    <button type="submit">Criar ticket no Planner</button>
+  </form>
+
+  <div id="status"></div>
+
+  <script>
+    const CONFIG = {
+      clientId: "92b0526e-e8f0-4cca-a711-b557e5c15fbc",
+      tenantId: "common", // ou o ID do seu tenant
+      planId: "ca4b9034-c4ac-4ca2-b97e-1e57700b0d20",
+      redirectUri: window.location.origin + window.location.pathname,
+      scopes: ["Tasks.ReadWrite", "Group.Read.All"]
+    };
+
+    const msalInstance = new msal.PublicClientApplication({
+      auth: {
+        clientId: CONFIG.clientId,
+        authority: `https://login.microsoftonline.com/${CONFIG.tenantId}`,
+        redirectUri: CONFIG.redirectUri
+      },
+      cache: { cacheLocation: "sessionStorage" }
+    });
+
+    let activeAccount = null;
+    const statusEl = document.getElementById("status");
+    const formEl = document.getElementById("chamadoForm");
+    const bucketSelect = document.getElementById("categoria");
+
+    const setStatus = (msg) => { statusEl.textContent = msg; };
+
+    async function getToken() {
+      const req = { scopes: CONFIG.scopes, account: activeAccount };
+      try {
+        const res = await msalInstance.acquireTokenSilent(req);
+        return res.accessToken;
+      } catch {
+        const res = await msalInstance.acquireTokenPopup(req);
+        activeAccount = res.account;
+        return res.accessToken;
+      }
+    }
+
+    async function graphFetch(url, options = {}) {
+      const token = await getToken();
+      const resp = await fetch(`https://graph.microsoft.com/v1.0${url}`, {
+        ...options,
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+      if (!resp.ok) {
+        const errText = await resp.text();
+        throw new Error(`Graph ${resp.status}: ${errText}`);
+      }
+      return resp.status === 204 ? null : resp.json();
+    }
+
+    async function carregarBuckets() {
+      const data = await graphFetch(`/planner/plans/${CONFIG.planId}/buckets`);
+      bucketSelect.innerHTML = '<option value="">Selecione uma categoria...</option>';
+      for (const b of data.value) {
+        const opt = document.createElement("option");
+        opt.value = b.id;
+        opt.textContent = b.name;
+        bucketSelect.appendChild(opt);
+      }
+    }
+
+    document.getElementById("btnLogin").addEventListener("click", async () => {
+      try {
+        const loginRes = await msalInstance.loginPopup({ scopes: CONFIG.scopes });
+        activeAccount = loginRes.account;
+        document.getElementById("btnLogin").style.display = "none";
+        formEl.style.display = "block";
+        setStatus("Autenticado. Carregando categorias...");
+        await carregarBuckets();
+        setStatus("Pronto para abrir chamado.");
+      } catch (e) {
+        setStatus("Erro no login: " + e.message);
+      }
+    });
+
+    formEl.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      try {
+        setStatus("Criando tarefa no Planner...");
+
+        // 1. Cria a task com título e bucket (categoria)
+        const task = await graphFetch("/planner/tasks", {
+          method: "POST",
+          body: JSON.stringify({
+            planId: CONFIG.planId,
+            bucketId: bucketSelect.value,
+            title: document.getElementById("titulo").value.trim()
+          })
+        });
+
+        // 2. Busca o plannerTaskDetails para obter o @odata.etag atual
+        const details = await graphFetch(`/planner/tasks/${task.id}/details`);
+        const etag = details["@odata.etag"];
+
+        // 3. Monta o PATCH com descrição e referência (evidência)
+        const patchBody = {
+          description: document.getElementById("descricao").value.trim()
+        };
+
+        const evUrl = document.getElementById("evidenciaUrl").value.trim();
+        const evAlias = document.getElementById("evidenciaAlias").value.trim() || "Evidência";
+
+        if (evUrl) {
+          const encodedKey = encodeURIComponent(evUrl);
+          patchBody.references = {
+            [encodedKey]: {
+              "@odata.type": "#microsoft.graph.plannerExternalReference",
+              alias: evAlias,
+              type: "Other"
+            }
+          };
+        }
+
+        await graphFetch(`/planner/tasks/${task.id}/details`, {
+          method: "PATCH",
+          headers: { "If-Match": etag },
+          body: JSON.stringify(patchBody)
+        });
+
+        setStatus(`Chamado criado com sucesso! ID da task: ${task.id}`);
+        formEl.reset();
+      } catch (e) {
+        setStatus("Falha ao criar chamado:\n" + e.message);
+      }
+    });
+  </script>
+</body>
+</html>
