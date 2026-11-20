@@ -217,8 +217,8 @@
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h2 class="text-lg font-bold text-slate-900">Consulta de Tickets</h2>
-              <p class="text-xs text-slate-500 mt-0.5">Acompanhe o andamento dos chamados registrados no plano.</p>
+              <h2 class="text-lg font-bold text-slate-900">Meus Tickets</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Exibindo apenas os chamados criados por você.</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2.5">
@@ -275,11 +275,11 @@
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div id="ticketsLoading" class="hidden p-10 text-center text-sm text-slate-500">
-            Carregando tickets do Microsoft Planner...
+            Carregando seus tickets do Microsoft Planner...
           </div>
 
           <div id="ticketsEmpty" class="hidden p-10 text-center text-sm text-slate-500">
-            Nenhum ticket encontrado para os filtros selecionados.
+            Nenhum ticket criado por você foi encontrado para os filtros selecionados.
           </div>
 
           <div class="overflow-x-auto">
@@ -364,6 +364,7 @@
     });
 
     let activeAccount = null;
+    let currentUserId = null;
     let bucketsMap = {};
     let allTasks = [];
 
@@ -406,8 +407,11 @@
 
     async function inicializarSessao(account) {
       activeAccount = account;
-      document.getElementById("userName").textContent = account.name || "Colaborador CMAA";
-      document.getElementById("userEmail").textContent = account.username || "";
+      const me = await graphFetch("/me?$select=id,displayName,mail,userPrincipalName");
+      currentUserId = me.id;
+
+      document.getElementById("userName").textContent = me.displayName || account.name || "Colaborador CMAA";
+      document.getElementById("userEmail").textContent = me.mail || me.userPrincipalName || account.username || "";
 
       loginScreen.classList.add("hidden");
       appShell.classList.remove("hidden");
@@ -575,7 +579,11 @@
 
       try {
         const data = await graphFetch(`/planner/plans/${CONFIG.planId}/tasks`);
-        allTasks = (data.value || []).sort((a, b) => new Date(b.createdDateTime) - new Date(a.createdDateTime));
+        const minhasTasks = (data.value || []).filter(
+          t => currentUserId && t.createdBy && t.createdBy.user && t.createdBy.user.id === currentUserId
+        );
+
+        allTasks = minhasTasks.sort((a, b) => new Date(b.createdDateTime) - new Date(a.createdDateTime));
         atualizarContadores(allTasks);
         renderizarTickets();
       } catch (e) {
