@@ -3,51 +3,435 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Abrir Chamado no Planner</title>
+  <title>Portal de Chamados | CMAA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            cmaa: {
+              dark: '#0A5C2E',
+              primary: '#167A3E',
+              medium: '#4D9E3F',
+              lime: '#A4C844',
+              light: '#F2F8F3',
+              surface: '#F7F9F8'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 16px; }
-    label { display: block; margin-top: 14px; font-weight: 600; }
-    input, textarea, select, button { width: 100%; padding: 10px; margin-top: 6px; box-sizing: border-box; }
-    button { cursor: pointer; font-weight: 600; }
-    #status { margin-top: 16px; white-space: pre-wrap; font-size: 0.9rem; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .cmaa-gradient {
+      background: linear-gradient(135deg, #0A5C2E 0%, #167A3E 55%, #7DB343 100%);
+    }
+    .cmaa-bar {
+      background: linear-gradient(90deg, #B5D34B 0%, #4D9E3F 50%, #0A5C2E 100%);
+    }
   </style>
 </head>
-<body>
-  <h1>Novo Chamado (Planner)</h1>
+<body class="bg-cmaa-surface text-slate-800 min-h-screen flex flex-col">
 
-  <button id="btnLogin" type="button">Entrar com Microsoft 365</button>
+  <!-- ==================== TELA DE LOGIN ==================== -->
+  <section id="loginScreen" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-slate-900">
+    <!-- Fundo sutil com tons da marca -->
+    <div class="absolute inset-0 opacity-20 cmaa-gradient"></div>
+    <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-cmaa-lime/10 blur-3xl"></div>
+    <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-cmaa-primary/20 blur-3xl"></div>
 
-  <form id="chamadoForm" style="display:none;">
-    <label for="titulo">Título do chamado</label>
-    <input id="titulo" type="text" required placeholder="Ex.: Erro ao acessar sistema financeiro" />
+    <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100">
+      <div class="h-2 w-full cmaa-bar"></div>
 
-    <label for="descricao">Descrição</label>
-    <textarea id="descricao" rows="4" required placeholder="Detalhe o problema ocorrido..."></textarea>
+      <div class="p-8 sm:p-10 text-center">
+        <!-- Logo CMAA no Menu de Login -->
+        <div class="flex justify-center mb-6">
+          <div class="w-60">
+            <svg viewBox="0 0 420 145" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CMAA - Cia Mineira de Açúcar e Álcool">
+              <defs>
+                <linearGradient id="cmaaWaveGradLogin" x1="0%" y1="50%" x2="100%" y2="50%">
+                  <stop offset="0%" stop-color="#E8F2C8" stop-opacity="0.2" />
+                  <stop offset="35%" stop-color="#A4C844" />
+                  <stop offset="70%" stop-color="#3B9341" />
+                  <stop offset="100%" stop-color="#0A5C2E" />
+                </linearGradient>
+              </defs>
+              <!-- Letras CMAA -->
+              <g fill="#111827">
+                <!-- C -->
+                <path d="M68 24 H116 V35 H76 C71 35 68 38 68 43 V57 C68 62 71 65 76 65 H116 V76 H68 C59 76 54 70 54 61 V39 C54 30 59 24 68 24 Z"/>
+                <!-- M -->
+                <path d="M128 76 V24 H143 L164 56 L185 24 H200 V76 H187 V42 L168 71 H160 L141 42 V76 H128 Z"/>
+                <!-- A -->
+                <path d="M236 24 H253 L281 76 H266 L260 64 H234 L229 76 H214 L236 24 Z M239 54 H255 L245 35 L239 54 Z"/>
+                <!-- A -->
+                <path d="M312 24 H329 L357 76 H342 L336 64 H310 L305 76 H290 L312 24 Z M315 54 H331 L321 35 L315 54 Z"/>
+              </g>
+              <!-- 3 Faixas Curvas Verdes -->
+              <path d="M25 104 Q195 72 385 96 L372 106 Q195 82 25 104 Z" fill="url(#cmaaWaveGradLogin)"/>
+              <path d="M35 111 Q190 83 352 107 L339 116 Q190 92 35 111 Z" fill="url(#cmaaWaveGradLogin)"/>
+              <path d="M48 118 Q185 94 316 117 L303 125 Q185 102 48 118 Z" fill="url(#cmaaWaveGradLogin)"/>
+              <!-- Subtítulo -->
+              <text x="210" y="139" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="11.5" font-weight="600" letter-spacing="2.2" fill="#1F2937">
+                CIA MINEIRA DE AÇÚCAR E ÁLCOOL
+              </text>
+            </svg>
+          </div>
+        </div>
 
-    <label for="categoria">Categoria (Bucket)</label>
-    <select id="categoria" required>
-      <option value="">Carregando buckets...</option>
-    </select>
+        <h1 class="text-xl font-bold text-slate-900">Portal de Chamados</h1>
+        <p class="text-sm text-slate-500 mt-1.5 mb-8">
+          Abertura e acompanhamento de solicitações integrado ao Microsoft Planner.
+        </p>
 
-    <label for="evidenciaUrl">Evidência (URL do arquivo/print no SharePoint/OneDrive ou link)</label>
-    <input id="evidenciaUrl" type="url" placeholder="https://..." />
+        <button id="btnLogin" type="button"
+          class="w-full flex items-center justify-center gap-3 bg-cmaa-dark hover:bg-cmaa-primary text-white font-semibold py-3.5 px-5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer">
+          <!-- Ícone Microsoft -->
+          <svg class="w-5 h-5 shrink-0" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+            <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+            <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+            <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+          </svg>
+          <span>Entrar com Microsoft 365</span>
+        </button>
 
-    <label for="evidenciaAlias">Nome da evidência</label>
-    <input id="evidenciaAlias" type="text" placeholder="Ex.: print-erro.png" />
+        <div id="loginStatus" class="mt-4 text-xs text-red-600 hidden bg-red-50 border border-red-200 rounded-lg p-3 text-left"></div>
 
-    <button type="submit">Criar ticket no Planner</button>
-  </form>
+        <p class="mt-8 text-[11px] text-slate-400">
+          Autenticação corporativa segura via Microsoft Entra ID
+        </p>
+      </div>
+    </div>
+  </section>
 
-  <div id="status"></div>
+  <!-- ==================== APLICAÇÃO PRINCIPAL ==================== -->
+  <div id="appShell" class="hidden flex-1 flex flex-col">
+
+    <!-- Cabeçalho com Logo e Menu de Navegação -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+      <div class="h-1.5 w-full cmaa-bar"></div>
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between gap-4 py-2.5">
+
+        <!-- Logo + Título -->
+        <div class="flex items-center gap-4">
+          <div class="w-32 sm:w-36 shrink-0">
+            <svg viewBox="0 0 420 145" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CMAA">
+              <defs>
+                <linearGradient id="cmaaWaveGradHeader" x1="0%" y1="50%" x2="100%" y2="50%">
+                  <stop offset="0%" stop-color="#E8F2C8" stop-opacity="0.2" />
+                  <stop offset="35%" stop-color="#A4C844" />
+                  <stop offset="70%" stop-color="#3B9341" />
+                  <stop offset="100%" stop-color="#0A5C2E" />
+                </linearGradient>
+              </defs>
+              <g fill="#111827">
+                <path d="M68 24 H116 V35 H76 C71 35 68 38 68 43 V57 C68 62 71 65 76 65 H116 V76 H68 C59 76 54 70 54 61 V39 C54 30 59 24 68 24 Z"/>
+                <path d="M128 76 V24 H143 L164 56 L185 24 H200 V76 H187 V42 L168 71 H160 L141 42 V76 H128 Z"/>
+                <path d="M236 24 H253 L281 76 H266 L260 64 H234 L229 76 H214 L236 24 Z M239 54 H255 L245 35 L239 54 Z"/>
+                <path d="M312 24 H329 L357 76 H342 L336 64 H310 L305 76 H290 L312 24 Z M315 54 H331 L321 35 L315 54 Z"/>
+              </g>
+              <path d="M25 104 Q195 72 385 96 L372 106 Q195 82 25 104 Z" fill="url(#cmaaWaveGradHeader)"/>
+              <path d="M35 111 Q190 83 352 107 L339 116 Q190 92 35 111 Z" fill="url(#cmaaWaveGradHeader)"/>
+              <path d="M48 118 Q185 94 316 117 L303 125 Q185 102 48 118 Z" fill="url(#cmaaWaveGradHeader)"/>
+              <text x="210" y="139" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="11.5" font-weight="600" letter-spacing="2.2" fill="#1F2937">
+                CIA MINEIRA DE AÇÚCAR E ÁLCOOL
+              </text>
+            </svg>
+          </div>
+          <div class="hidden md:block h-8 w-px bg-slate-200"></div>
+          <div class="hidden md:block">
+            <span class="text-sm font-bold text-slate-800 block leading-tight">Central de Chamados</span>
+            <span class="text-xs text-cmaa-primary font-medium">Gente &amp; Gestão / TI</span>
+          </div>
+        </div>
+
+        <!-- Menu de Abas (Abertura e Consulta) -->
+        <nav class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80">
+          <button id="tabNovo" type="button"
+            class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-cmaa-dark text-white shadow-xs cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+            <span>Abrir Chamado</span>
+          </button>
+          <button id="tabConsulta" type="button"
+            class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <span>Consultar Tickets</span>
+          </button>
+        </nav>
+
+        <!-- Usuário Logado + Sair -->
+        <div class="flex items-center gap-3">
+          <div class="hidden lg:block text-right">
+            <div id="userName" class="text-xs font-semibold text-slate-800 truncate max-w-[160px]">Usuário</div>
+            <div id="userEmail" class="text-[11px] text-slate-500 truncate max-w-[160px]"></div>
+          </div>
+          <button id="btnLogout" type="button" title="Sair da conta"
+            class="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
+
+      <!-- ==================== ABA 1: ABRIR CHAMADO ==================== -->
+      <section id="viewNovo" class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="px-6 py-5 border-b border-slate-100 bg-cmaa-light/60 flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">Novo Chamado</h2>
+              <p class="text-xs text-slate-600 mt-0.5">Preencha os dados abaixo para registrar sua solicitação no Planner.</p>
+            </div>
+            <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-cmaa-primary/10 text-cmaa-dark">
+              <span class="w-2 h-2 rounded-full bg-cmaa-primary"></span>
+              Planner Conectado
+            </span>
+          </div>
+
+          <form id="chamadoForm" class="p-6 space-y-5">
+            <div>
+              <label for="titulo" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Título do chamado <span class="text-red-500">*</span>
+              </label>
+              <input id="titulo" type="text" required
+                placeholder="Ex.: Erro ao acessar sistema ou solicitação de ajuste"
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition" />
+            </div>
+
+            <div>
+              <label for="categoria" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Categoria (Fila / Bucket) <span class="text-red-500">*</span>
+              </label>
+              <select id="categoria" required
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition">
+                <option value="">Carregando categorias...</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="descricao" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Descrição detalhada <span class="text-red-500">*</span>
+              </label>
+              <textarea id="descricao" rows="4" required
+                placeholder="Descreva o problema, unidade, matrícula ou informações relevantes..."
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition"></textarea>
+            </div>
+
+            <!-- Upload de Arquivo do Computador -->
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Anexar evidência do computador <span class="text-xs font-normal text-slate-400">(opcional — imagem, PDF, Excel, etc.)</span>
+              </label>
+
+              <div id="dropZone"
+                class="relative border-2 border-dashed border-slate-300 hover:border-cmaa-primary rounded-xl p-5 text-center transition-colors bg-slate-50/70 cursor-pointer">
+                <input id="arquivoInput" type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                <div id="dropPlaceholder" class="flex flex-col items-center">
+                  <div class="w-10 h-10 rounded-full bg-cmaa-primary/10 text-cmaa-dark flex items-center justify-center mb-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                  </div>
+                  <p class="text-sm font-medium text-slate-700">Clique para escolher um arquivo ou arraste aqui</p>
+                  <p class="text-xs text-slate-400 mt-0.5">O arquivo será salvo no seu OneDrive e vinculado automaticamente ao ticket</p>
+                </div>
+
+                <div id="fileSelectedInfo" class="hidden flex items-center justify-between bg-white border border-cmaa-primary/30 rounded-lg px-3.5 py-2.5 text-left">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <svg class="w-5 h-5 text-cmaa-primary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                    </svg>
+                    <div class="truncate">
+                      <p id="selectedFileName" class="text-sm font-semibold text-slate-800 truncate"></p>
+                      <p id="selectedFileSize" class="text-xs text-slate-500"></p>
+                    </div>
+                  </div>
+                  <button id="btnRemoveFile" type="button" class="relative z-10 text-xs font-semibold text-red-600 hover:underline ml-3 cursor-pointer">
+                    Remover
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feedback / Status -->
+            <div id="statusBox" class="hidden rounded-xl p-3.5 text-sm"></div>
+
+            <div class="pt-2 flex items-center justify-end gap-3">
+              <button type="reset" id="btnLimpar"
+                class="px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+                Limpar
+              </button>
+              <button id="btnSubmit" type="submit"
+                class="px-6 py-2.5 rounded-xl bg-cmaa-dark hover:bg-cmaa-primary text-white text-sm font-semibold shadow-sm transition flex items-center gap-2 cursor-pointer">
+                <span>Criar Ticket no Planner</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ==================== ABA 2: CONSULTAR TICKETS ==================== -->
+      <section id="viewConsulta" class="hidden space-y-6">
+        <!-- Barra de Filtros e Resumo -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">Consulta de Tickets</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Acompanhe o andamento dos chamados registrados no plano.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5">
+              <div class="relative">
+                <input id="filtroBusca" type="text" placeholder="Buscar por título..."
+                  class="pl-9 pr-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary w-56" />
+                <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
+                </svg>
+              </div>
+
+              <select id="filtroStatus"
+                class="py-2 px-3 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-cmaa-primary">
+                <option value="all">Todos os status</option>
+                <option value="0">Não iniciado</option>
+                <option value="50">Em andamento</option>
+                <option value="100">Concluído</option>
+              </select>
+
+              <select id="filtroBucket"
+                class="py-2 px-3 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-cmaa-primary">
+                <option value="all">Todas as categorias</option>
+              </select>
+
+              <button id="btnAtualizarTickets" type="button"
+                class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cmaa-light text-cmaa-dark hover:bg-cmaa-primary hover:text-white font-semibold text-sm transition cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <span>Atualizar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Cards de Contadores -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-4 border-t border-slate-100">
+            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200/60">
+              <span class="text-xs text-slate-500 font-medium">Total</span>
+              <p id="statTotal" class="text-xl font-bold text-slate-800 mt-0.5">0</p>
+            </div>
+            <div class="bg-amber-50/70 rounded-xl p-3 border border-amber-200/60">
+              <span class="text-xs text-amber-700 font-medium">Não iniciados</span>
+              <p id="statPendente" class="text-xl font-bold text-amber-800 mt-0.5">0</p>
+            </div>
+            <div class="bg-blue-50/70 rounded-xl p-3 border border-blue-200/60">
+              <span class="text-xs text-blue-700 font-medium">Em andamento</span>
+              <p id="statAndamento" class="text-xl font-bold text-blue-800 mt-0.5">0</p>
+            </div>
+            <div class="bg-cmaa-light rounded-xl p-3 border border-cmaa-primary/20">
+              <span class="text-xs text-cmaa-dark font-medium">Concluídos</span>
+              <p id="statConcluido" class="text-xl font-bold text-cmaa-dark mt-0.5">0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabela / Lista de Tickets -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div id="ticketsLoading" class="hidden p-10 text-center text-sm text-slate-500">
+            Carregando tickets do Microsoft Planner...
+          </div>
+
+          <div id="ticketsEmpty" class="hidden p-10 text-center text-sm text-slate-500">
+            Nenhum ticket encontrado para os filtros selecionados.
+          </div>
+
+          <div class="overflow-x-auto">
+            <table id="ticketsTable" class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <th class="py-3.5 px-5">Título do Chamado</th>
+                  <th class="py-3.5 px-4">Categoria</th>
+                  <th class="py-3.5 px-4">Status</th>
+                  <th class="py-3.5 px-4">Criado em</th>
+                  <th class="py-3.5 px-5 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="ticketsBody" class="divide-y divide-slate-100 text-sm"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==================== MODAL DE DETALHES DO TICKET ==================== -->
+  <div id="detailModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="h-1.5 w-full cmaa-bar"></div>
+      <div class="px-6 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
+        <div>
+          <span id="modalBucket" class="text-[11px] font-semibold uppercase tracking-wider text-cmaa-primary bg-cmaa-light px-2.5 py-0.5 rounded-full"></span>
+          <h3 id="modalTitle" class="text-base font-bold text-slate-900 mt-2"></h3>
+        </div>
+        <button id="btnCloseModal" type="button" class="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 text-sm">
+        <div class="flex items-center justify-between text-xs text-slate-500 bg-slate-50 p-3 rounded-xl">
+          <span>Status: <strong id="modalStatus" class="text-slate-800"></strong></span>
+          <span>Data: <strong id="modalDate" class="text-slate-800"></strong></span>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Descrição</h4>
+          <div id="modalDesc" class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-slate-700 whitespace-pre-wrap max-h-48 overflow-y-auto">
+            Carregando descrição...
+          </div>
+        </div>
+
+        <div id="modalRefsContainer" class="hidden">
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Anexos / Evidências</h4>
+          <ul id="modalRefsList" class="space-y-1.5"></ul>
+        </div>
+      </div>
+
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex justify-end">
+        <button id="btnCloseModalFooter" type="button"
+          class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold cursor-pointer">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const CONFIG = {
       clientId: "92b0526e-e8f0-4cca-a711-b557e5c15fbc",
-      tenantId: "ca4b9034-c4ac-4ca2-b97e-1e57700b0d20", // Substitua pelo Directory (tenant) ID do Entra ID
+      tenantId: "ca4b9034-c4ac-4ca2-b97e-1e57700b0d20",
       planId: "b1bp08s0JUOBqf6letyihmQAAEPh",
       redirectUri: window.location.origin + window.location.pathname,
-      scopes: ["Tasks.ReadWrite", "Group.Read.All"]
+      // Files.ReadWrite necessário para enviar o anexo selecionado ao OneDrive e vincular no Planner
+      scopes: ["Tasks.ReadWrite", "Group.Read.All", "Files.ReadWrite"]
     };
 
     const msalInstance = new msal.PublicClientApplication({
@@ -60,12 +444,20 @@
     });
 
     let activeAccount = null;
-    const statusEl = document.getElementById("status");
+    let bucketsMap = {};
+    let allTasks = [];
+
+    // Elementos DOM
+    const loginScreen = document.getElementById("loginScreen");
+    const appShell = document.getElementById("appShell");
+    const loginStatus = document.getElementById("loginStatus");
+    const statusBox = document.getElementById("statusBox");
     const formEl = document.getElementById("chamadoForm");
     const bucketSelect = document.getElementById("categoria");
+    const filtroBucket = document.getElementById("filtroBucket");
+    const arquivoInput = document.getElementById("arquivoInput");
 
-    const setStatus = (msg) => { statusEl.textContent = msg; };
-
+    // ==================== AUTENTICAÇÃO ====================
     async function getToken() {
       const req = { scopes: CONFIG.scopes, account: activeAccount };
       try {
@@ -80,14 +472,19 @@
 
     async function graphFetch(url, options = {}) {
       const token = await getToken();
+      const headers = {
+        "Authorization": `Bearer ${token}`,
+        ...(options.headers || {})
+      };
+      if (!options.isBinary && !headers["Content-Type"]) {
+        headers["Content-Type"] = "application/json";
+      }
+
       const resp = await fetch(`https://graph.microsoft.com/v1.0${url}`, {
         ...options,
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-          ...(options.headers || {})
-        }
+        headers
       });
+
       if (!resp.ok) {
         const errText = await resp.text();
         throw new Error(`Graph ${resp.status}: ${errText}`);
@@ -95,37 +492,186 @@
       return resp.status === 204 ? null : resp.json();
     }
 
-    async function carregarBuckets() {
-      const data = await graphFetch(`/planner/plans/${CONFIG.planId}/buckets`);
-      bucketSelect.innerHTML = '<option value="">Selecione uma categoria...</option>';
-      for (const b of data.value) {
-        const opt = document.createElement("option");
-        opt.value = b.id;
-        opt.textContent = b.name;
-        bucketSelect.appendChild(opt);
-      }
+    async function inicializarSessao(account) {
+      activeAccount = account;
+      document.getElementById("userName").textContent = account.name || "Colaborador CMAA";
+      document.getElementById("userEmail").textContent = account.username || "";
+
+      loginScreen.classList.add("hidden");
+      appShell.classList.remove("hidden");
+
+      await carregarBuckets();
     }
 
+    // Verifica se já existe sessão ativa no sessionStorage
+    (async () => {
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length > 0) {
+        try {
+          await inicializarSessao(accounts[0]);
+        } catch (e) {
+          console.warn("Sessão expirada, aguardando novo login.", e);
+        }
+      }
+    })();
+
     document.getElementById("btnLogin").addEventListener("click", async () => {
+      loginStatus.classList.add("hidden");
       try {
         const loginRes = await msalInstance.loginPopup({ scopes: CONFIG.scopes });
-        activeAccount = loginRes.account;
-        document.getElementById("btnLogin").style.display = "none";
-        formEl.style.display = "block";
-        setStatus("Autenticado. Carregando categorias...");
-        await carregarBuckets();
-        setStatus("Pronto para abrir chamado.");
+        await inicializarSessao(loginRes.account);
       } catch (e) {
-        setStatus("Erro no login: " + e.message);
+        loginStatus.textContent = "Não foi possível autenticar: " + e.message;
+        loginStatus.classList.remove("hidden");
       }
     });
 
+    document.getElementById("btnLogout").addEventListener("click", () => {
+      sessionStorage.clear();
+      window.location.reload();
+    });
+
+    // ==================== NAVEGAÇÃO ENTRE TELAS ====================
+    const tabNovo = document.getElementById("tabNovo");
+    const tabConsulta = document.getElementById("tabConsulta");
+    const viewNovo = document.getElementById("viewNovo");
+    const viewConsulta = document.getElementById("viewConsulta");
+
+    function ativarAba(aba) {
+      if (aba === "novo") {
+        viewNovo.classList.remove("hidden");
+        viewConsulta.classList.add("hidden");
+        tabNovo.className = "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-cmaa-dark text-white shadow-xs cursor-pointer";
+        tabConsulta.className = "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer";
+      } else {
+        viewNovo.classList.add("hidden");
+        viewConsulta.classList.remove("hidden");
+        tabConsulta.className = "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-cmaa-dark text-white shadow-xs cursor-pointer";
+        tabNovo.className = "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer";
+        carregarTickets();
+      }
+    }
+
+    tabNovo.addEventListener("click", () => ativarAba("novo"));
+    tabConsulta.addEventListener("click", () => ativarAba("consulta"));
+
+    // ==================== BUCKETS (CATEGORIAS) ====================
+    async function carregarBuckets() {
+      const data = await graphFetch(`/planner/plans/${CONFIG.planId}/buckets`);
+      bucketSelect.innerHTML = '<option value="">Selecione uma categoria...</option>';
+      filtroBucket.innerHTML = '<option value="all">Todas as categorias</option>';
+      bucketsMap = {};
+
+      for (const b of data.value) {
+        bucketsMap[b.id] = b.name;
+
+        const opt1 = document.createElement("option");
+        opt1.value = b.id;
+        opt1.textContent = b.name;
+        bucketSelect.appendChild(opt1);
+
+        const opt2 = document.createElement("option");
+        opt2.value = b.id;
+        opt2.textContent = b.name;
+        filtroBucket.appendChild(opt2);
+      }
+    }
+
+    // ==================== UPLOAD DE ARQUIVO LOCAL ====================
+    function formatBytes(bytes) {
+      if (bytes === 0) return "0 Bytes";
+      const k = 1024;
+      const sizes = ["Bytes", "KB", "MB", "GB"];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    }
+
+    arquivoInput.addEventListener("change", () => {
+      const file = arquivoInput.files[0];
+      if (file) {
+        document.getElementById("dropPlaceholder").classList.add("hidden");
+        document.getElementById("fileSelectedInfo").classList.remove("hidden");
+        document.getElementById("selectedFileName").textContent = file.name;
+        document.getElementById("selectedFileSize").textContent = formatBytes(file.size);
+      }
+    });
+
+    function limparArquivo() {
+      arquivoInput.value = "";
+      document.getElementById("dropPlaceholder").classList.remove("hidden");
+      document.getElementById("fileSelectedInfo").classList.add("hidden");
+    }
+
+    document.getElementById("btnRemoveFile").addEventListener("click", (e) => {
+      e.stopPropagation();
+      limparArquivo();
+    });
+
+    document.getElementById("btnLimpar").addEventListener("click", () => {
+      limparArquivo();
+      statusBox.classList.add("hidden");
+    });
+
+    async function uploadArquivoParaOneDrive(file) {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const safeName = `${timestamp}_${file.name.replace(/[#%*:<>?/\\|]/g, "_")}`;
+      const uploadPath = `/me/drive/root:/Chamados_Planner/${encodeURIComponent(safeName)}:/content`;
+
+      const uploadedItem = await graphFetch(uploadPath, {
+        method: "PUT",
+        isBinary: true,
+        headers: { "Content-Type": file.type || "application/octet-stream" },
+        body: file
+      });
+
+      // Cria link de visualização na organização
+      const linkRes = await graphFetch(`/me/drive/items/${uploadedItem.id}/createLink`, {
+        method: "POST",
+        body: JSON.stringify({
+          type: "view",
+          scope: "organization"
+        })
+      });
+
+      return {
+        url: linkRes.link.webUrl,
+        name: file.name
+      };
+    }
+
+    // ==================== CRIAÇÃO DO CHAMADO ====================
+    function showFeedback(type, msg) {
+      statusBox.classList.remove("hidden", "bg-emerald-50", "text-emerald-800", "border-emerald-200", "bg-red-50", "text-red-800", "border-red-200", "bg-blue-50", "text-blue-800", "border-blue-200");
+      statusBox.classList.add("border");
+
+      if (type === "success") {
+        statusBox.classList.add("bg-emerald-50", "text-emerald-800", "border-emerald-200");
+      } else if (type === "error") {
+        statusBox.classList.add("bg-red-50", "text-red-800", "border-red-200");
+      } else {
+        statusBox.classList.add("bg-blue-50", "text-blue-800", "border-blue-200");
+      }
+      statusBox.textContent = msg;
+    }
+
     formEl.addEventListener("submit", async (ev) => {
       ev.preventDefault();
-      try {
-        setStatus("Criando tarefa no Planner...");
+      const btnSubmit = document.getElementById("btnSubmit");
+      btnSubmit.disabled = true;
+      btnSubmit.classList.add("opacity-60");
 
-        // 1. Cria a task com título e bucket (categoria)
+      try {
+        let anexoInfo = null;
+        const file = arquivoInput.files[0];
+
+        if (file) {
+          showFeedback("info", `Enviando anexo "${file.name}" para o OneDrive...`);
+          anexoInfo = await uploadArquivoParaOneDrive(file);
+        }
+
+        showFeedback("info", "Registrando chamado no Microsoft Planner...");
+
+        // 1. Cria a task
         const task = await graphFetch("/planner/tasks", {
           method: "POST",
           body: JSON.stringify({
@@ -135,24 +681,22 @@
           })
         });
 
-        // 2. Busca o plannerTaskDetails para obter o @odata.etag atual
+        // 2. Obtém ETag dos detalhes
         const details = await graphFetch(`/planner/tasks/${task.id}/details`);
         const etag = details["@odata.etag"];
 
-        // 3. Monta o PATCH com descrição e referência (evidência)
+        // 3. Atualiza descrição e referência do arquivo
         const patchBody = {
           description: document.getElementById("descricao").value.trim()
         };
 
-        const evUrl = document.getElementById("evidenciaUrl").value.trim();
-        const evAlias = document.getElementById("evidenciaAlias").value.trim() || "Evidência";
-
-        if (evUrl) {
-          const encodedKey = encodeURIComponent(evUrl);
+        if (anexoInfo) {
+          // O Graph exige codificação específica de caracteres especiais na chave de references
+          const encodedKey = encodeURIComponent(anexoInfo.url).replace(/\./g, "%2E");
           patchBody.references = {
             [encodedKey]: {
               "@odata.type": "#microsoft.graph.plannerExternalReference",
-              alias: evAlias,
+              alias: anexoInfo.name,
               type: "Other"
             }
           };
@@ -164,11 +708,185 @@
           body: JSON.stringify(patchBody)
         });
 
-        setStatus(`Chamado criado com sucesso! ID da task: ${task.id}`);
+        showFeedback("success", `Chamado criado com sucesso! Protocolo: ${task.id.slice(0, 8).toUpperCase()}`);
         formEl.reset();
+        limparArquivo();
       } catch (e) {
-        setStatus("Falha ao criar chamado:\n" + e.message);
+        showFeedback("error", "Falha ao criar chamado: " + e.message);
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.classList.remove("opacity-60");
       }
+    });
+
+    // ==================== CONSULTA DE TICKETS ====================
+    async function carregarTickets() {
+      const loadingEl = document.getElementById("ticketsLoading");
+      const bodyEl = document.getElementById("ticketsBody");
+      const emptyEl = document.getElementById("ticketsEmpty");
+
+      loadingEl.classList.remove("hidden");
+      emptyEl.classList.add("hidden");
+      bodyEl.innerHTML = "";
+
+      try {
+        const data = await graphFetch(`/planner/plans/${CONFIG.planId}/tasks`);
+        allTasks = (data.value || []).sort((a, b) => new Date(b.createdDateTime) - new Date(a.createdDateTime));
+        atualizarContadores(allTasks);
+        renderizarTickets();
+      } catch (e) {
+        emptyEl.textContent = "Erro ao carregar tickets: " + e.message;
+        emptyEl.classList.remove("hidden");
+      } finally {
+        loadingEl.classList.add("hidden");
+      }
+    }
+
+    function atualizarContadores(tasks) {
+      document.getElementById("statTotal").textContent = tasks.length;
+      document.getElementById("statPendente").textContent = tasks.filter(t => t.percentComplete === 0).length;
+      document.getElementById("statAndamento").textContent = tasks.filter(t => t.percentComplete > 0 && t.percentComplete < 100).length;
+      document.getElementById("statConcluido").textContent = tasks.filter(t => t.percentComplete === 100).length;
+    }
+
+    function getStatusBadge(percent) {
+      if (percent === 100) {
+        return '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Concluído</span>';
+      }
+      if (percent > 0) {
+        return '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>Em andamento</span>';
+      }
+      return '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>Não iniciado</span>';
+    }
+
+    function formatarData(isoStr) {
+      if (!isoStr) return "-";
+      return new Date(isoStr).toLocaleDateString("pt-BR", {
+        day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit"
+      });
+    }
+
+    function renderizarTickets() {
+      const busca = document.getElementById("filtroBusca").value.toLowerCase().trim();
+      const status = document.getElementById("filtroStatus").value;
+      const bucket = document.getElementById("filtroBucket").value;
+      const bodyEl = document.getElementById("ticketsBody");
+      const emptyEl = document.getElementById("ticketsEmpty");
+
+      const filtrados = allTasks.filter(t => {
+        const matchBusca = !busca || (t.title || "").toLowerCase().includes(busca);
+        const matchBucket = bucket === "all" || t.bucketId === bucket;
+        let matchStatus = true;
+        if (status === "0") matchStatus = t.percentComplete === 0;
+        if (status === "50") matchStatus = t.percentComplete > 0 && t.percentComplete < 100;
+        if (status === "100") matchStatus = t.percentComplete === 100;
+        return matchBusca && matchBucket && matchStatus;
+      });
+
+      bodyEl.innerHTML = "";
+
+      if (filtrados.length === 0) {
+        emptyEl.classList.remove("hidden");
+        return;
+      }
+      emptyEl.classList.add("hidden");
+
+      for (const task of filtrados) {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50/90 transition-colors";
+
+        const bucketName = bucketsMap[task.bucketId] || "Sem categoria";
+
+        tr.innerHTML = `
+          <td class="py-3.5 px-5 font-medium text-slate-900">
+            <div>${escapeHtml(task.title)}</div>
+            <div class="text-[11px] text-slate-400 font-mono mt-0.5">#${task.id.slice(0, 8).toUpperCase()}</div>
+          </td>
+          <td class="py-3.5 px-4">
+            <span class="inline-block px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">
+              ${escapeHtml(bucketName)}
+            </span>
+          </td>
+          <td class="py-3.5 px-4">${getStatusBadge(task.percentComplete)}</td>
+          <td class="py-3.5 px-4 text-xs text-slate-500">${formatarData(task.createdDateTime)}</td>
+          <td class="py-3.5 px-5 text-right">
+            <button type="button" data-id="${task.id}"
+              class="btn-detalhes text-xs font-semibold text-cmaa-dark hover:text-cmaa-primary bg-cmaa-light hover:bg-cmaa-primary/15 px-3 py-1.5 rounded-lg transition cursor-pointer">
+              Ver detalhes
+            </button>
+          </td>
+        `;
+        bodyEl.appendChild(tr);
+      }
+
+      document.querySelectorAll(".btn-detalhes").forEach(btn => {
+        btn.addEventListener("click", () => abrirDetalhesTicket(btn.dataset.id));
+      });
+    }
+
+    function escapeHtml(str) {
+      return (str || "").replace(/[&<>"']/g, m => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[m]));
+    }
+
+    document.getElementById("filtroBusca").addEventListener("input", renderizarTickets);
+    document.getElementById("filtroStatus").addEventListener("change", renderizarTickets);
+    document.getElementById("filtroBucket").addEventListener("change", renderizarTickets);
+    document.getElementById("btnAtualizarTickets").addEventListener("click", carregarTickets);
+
+    // ==================== MODAL DE DETALHES ====================
+    const detailModal = document.getElementById("detailModal");
+
+    async function abrirDetalhesTicket(taskId) {
+      const task = allTasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      document.getElementById("modalBucket").textContent = bucketsMap[task.bucketId] || "Categoria";
+      document.getElementById("modalTitle").textContent = task.title;
+      document.getElementById("modalStatus").textContent =
+        task.percentComplete === 100 ? "Concluído" : (task.percentComplete > 0 ? "Em andamento" : "Não iniciado");
+      document.getElementById("modalDate").textContent = formatarData(task.createdDateTime);
+      document.getElementById("modalDesc").textContent = "Carregando detalhes...";
+      document.getElementById("modalRefsContainer").classList.add("hidden");
+      document.getElementById("modalRefsList").innerHTML = "";
+
+      detailModal.classList.remove("hidden");
+
+      try {
+        const details = await graphFetch(`/planner/tasks/${taskId}/details`);
+        document.getElementById("modalDesc").textContent = details.description || "Nenhuma descrição informada.";
+
+        const refs = details.references || {};
+        const keys = Object.keys(refs);
+        if (keys.length > 0) {
+          const listEl = document.getElementById("modalRefsList");
+          keys.forEach(encodedUrl => {
+            const url = decodeURIComponent(encodedUrl);
+            const alias = refs[encodedUrl].alias || "Abrir anexo";
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <a href="${url}" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 text-xs font-semibold text-cmaa-dark hover:underline bg-cmaa-light px-3 py-2 rounded-lg w-full">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+                <span class="truncate">${escapeHtml(alias)}</span>
+              </a>
+            `;
+            listEl.appendChild(li);
+          });
+          document.getElementById("modalRefsContainer").classList.remove("hidden");
+        }
+      } catch (e) {
+        document.getElementById("modalDesc").textContent = "Erro ao carregar detalhes: " + e.message;
+      }
+    }
+
+    document.getElementById("btnCloseModal").addEventListener("click", () => detailModal.classList.add("hidden"));
+    document.getElementById("btnCloseModalFooter").addEventListener("click", () => detailModal.classList.add("hidden"));
+    detailModal.addEventListener("click", (e) => {
+      if (e.target === detailModal) detailModal.classList.add("hidden");
     });
   </script>
 </body>
