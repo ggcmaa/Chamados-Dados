@@ -44,7 +44,6 @@
 
   <!-- ==================== TELA DE LOGIN ==================== -->
   <section id="loginScreen" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-slate-900">
-    <!-- Fundo sutil com tons da marca -->
     <div class="absolute inset-0 opacity-20 cmaa-gradient"></div>
     <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-cmaa-lime/10 blur-3xl"></div>
     <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-cmaa-primary/20 blur-3xl"></div>
@@ -55,37 +54,7 @@
       <div class="p-8 sm:p-10 text-center">
         <!-- Logo CMAA no Menu de Login -->
         <div class="flex justify-center mb-6">
-          <div class="w-60">
-            <svg viewBox="0 0 420 145" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CMAA - Cia Mineira de Açúcar e Álcool">
-              <defs>
-                <linearGradient id="cmaaWaveGradLogin" x1="0%" y1="50%" x2="100%" y2="50%">
-                  <stop offset="0%" stop-color="#E8F2C8" stop-opacity="0.2" />
-                  <stop offset="35%" stop-color="#A4C844" />
-                  <stop offset="70%" stop-color="#3B9341" />
-                  <stop offset="100%" stop-color="#0A5C2E" />
-                </linearGradient>
-              </defs>
-              <!-- Letras CMAA -->
-              <g fill="#111827">
-                <!-- C -->
-                <path d="M68 24 H116 V35 H76 C71 35 68 38 68 43 V57 C68 62 71 65 76 65 H116 V76 H68 C59 76 54 70 54 61 V39 C54 30 59 24 68 24 Z"/>
-                <!-- M -->
-                <path d="M128 76 V24 H143 L164 56 L185 24 H200 V76 H187 V42 L168 71 H160 L141 42 V76 H128 Z"/>
-                <!-- A -->
-                <path d="M236 24 H253 L281 76 H266 L260 64 H234 L229 76 H214 L236 24 Z M239 54 H255 L245 35 L239 54 Z"/>
-                <!-- A -->
-                <path d="M312 24 H329 L357 76 H342 L336 64 H310 L305 76 H290 L312 24 Z M315 54 H331 L321 35 L315 54 Z"/>
-              </g>
-              <!-- 3 Faixas Curvas Verdes -->
-              <path d="M25 104 Q195 72 385 96 L372 106 Q195 82 25 104 Z" fill="url(#cmaaWaveGradLogin)"/>
-              <path d="M35 111 Q190 83 352 107 L339 116 Q190 92 35 111 Z" fill="url(#cmaaWaveGradLogin)"/>
-              <path d="M48 118 Q185 94 316 117 L303 125 Q185 102 48 118 Z" fill="url(#cmaaWaveGradLogin)"/>
-              <!-- Subtítulo -->
-              <text x="210" y="139" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="11.5" font-weight="600" letter-spacing="2.2" fill="#1F2937">
-                CIA MINEIRA DE AÇÚCAR E ÁLCOOL
-              </text>
-            </svg>
-          </div>
+          <img src="./CMAA.png" alt="CMAA - Cia Mineira de Açúcar e Álcool" class="w-60 h-auto object-contain" />
         </div>
 
         <h1 class="text-xl font-bold text-slate-900">Portal de Chamados</h1>
@@ -95,7 +64,6 @@
 
         <button id="btnLogin" type="button"
           class="w-full flex items-center justify-center gap-3 bg-cmaa-dark hover:bg-cmaa-primary text-white font-semibold py-3.5 px-5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer">
-          <!-- Ícone Microsoft -->
           <svg class="w-5 h-5 shrink-0" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
             <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
             <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
@@ -120,34 +88,11 @@
     <!-- Cabeçalho com Logo e Menu de Navegação -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
       <div class="h-1.5 w-full cmaa-bar"></div>
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between gap-4 py-2.5">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4 py-2.5">
 
         <!-- Logo + Título -->
         <div class="flex items-center gap-4">
-          <div class="w-32 sm:w-36 shrink-0">
-            <svg viewBox="0 0 420 145" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CMAA">
-              <defs>
-                <linearGradient id="cmaaWaveGradHeader" x1="0%" y1="50%" x2="100%" y2="50%">
-                  <stop offset="0%" stop-color="#E8F2C8" stop-opacity="0.2" />
-                  <stop offset="35%" stop-color="#A4C844" />
-                  <stop offset="70%" stop-color="#3B9341" />
-                  <stop offset="100%" stop-color="#0A5C2E" />
-                </linearGradient>
-              </defs>
-              <g fill="#111827">
-                <path d="M68 24 H116 V35 H76 C71 35 68 38 68 43 V57 C68 62 71 65 76 65 H116 V76 H68 C59 76 54 70 54 61 V39 C54 30 59 24 68 24 Z"/>
-                <path d="M128 76 V24 H143 L164 56 L185 24 H200 V76 H187 V42 L168 71 H160 L141 42 V76 H128 Z"/>
-                <path d="M236 24 H253 L281 76 H266 L260 64 H234 L229 76 H214 L236 24 Z M239 54 H255 L245 35 L239 54 Z"/>
-                <path d="M312 24 H329 L357 76 H342 L336 64 H310 L305 76 H290 L312 24 Z M315 54 H331 L321 35 L315 54 Z"/>
-              </g>
-              <path d="M25 104 Q195 72 385 96 L372 106 Q195 82 25 104 Z" fill="url(#cmaaWaveGradHeader)"/>
-              <path d="M35 111 Q190 83 352 107 L339 116 Q190 92 35 111 Z" fill="url(#cmaaWaveGradHeader)"/>
-              <path d="M48 118 Q185 94 316 117 L303 125 Q185 102 48 118 Z" fill="url(#cmaaWaveGradHeader)"/>
-              <text x="210" y="139" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="11.5" font-weight="600" letter-spacing="2.2" fill="#1F2937">
-                CIA MINEIRA DE AÇÚCAR E ÁLCOOL
-              </text>
-            </svg>
-          </div>
+          <img src="./CMAA.png" alt="CMAA - Cia Mineira de Açúcar e Álcool" class="w-32 sm:w-36 h-auto object-contain shrink-0" />
           <div class="hidden md:block h-8 w-px bg-slate-200"></div>
           <div class="hidden md:block">
             <span class="text-sm font-bold text-slate-800 block leading-tight">Central de Chamados</span>
@@ -212,13 +157,22 @@
                 Título do chamado <span class="text-red-500">*</span>
               </label>
               <input id="titulo" type="text" required
-                placeholder="Ex.: Erro ao acessar sistema ou solicitação de ajuste"
+                placeholder="Ex.: Erro ao acessar sistema financeiro"
                 class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition" />
             </div>
 
             <div>
+              <label for="descricao" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Descrição <span class="text-red-500">*</span>
+              </label>
+              <textarea id="descricao" rows="4" required
+                placeholder="Detalhe o problema ocorrido..."
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition"></textarea>
+            </div>
+
+            <div>
               <label for="categoria" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Categoria (Fila / Bucket) <span class="text-red-500">*</span>
+                Categoria (Bucket) <span class="text-red-500">*</span>
               </label>
               <select id="categoria" required
                 class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition">
@@ -227,52 +181,22 @@
             </div>
 
             <div>
-              <label for="descricao" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Descrição detalhada <span class="text-red-500">*</span>
+              <label for="evidenciaUrl" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Evidência (URL do arquivo/print no SharePoint/OneDrive ou link)
               </label>
-              <textarea id="descricao" rows="4" required
-                placeholder="Descreva o problema, unidade, matrícula ou informações relevantes..."
-                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition"></textarea>
+              <input id="evidenciaUrl" type="url" placeholder="https://..."
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition" />
             </div>
 
-            <!-- Upload de Arquivo do Computador -->
             <div>
-              <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Anexar evidência do computador <span class="text-xs font-normal text-slate-400">(opcional — imagem, PDF, Excel, etc.)</span>
+              <label for="evidenciaAlias" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Nome da evidência
               </label>
-
-              <div id="dropZone"
-                class="relative border-2 border-dashed border-slate-300 hover:border-cmaa-primary rounded-xl p-5 text-center transition-colors bg-slate-50/70 cursor-pointer">
-                <input id="arquivoInput" type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
-                <div id="dropPlaceholder" class="flex flex-col items-center">
-                  <div class="w-10 h-10 rounded-full bg-cmaa-primary/10 text-cmaa-dark flex items-center justify-center mb-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-                    </svg>
-                  </div>
-                  <p class="text-sm font-medium text-slate-700">Clique para escolher um arquivo ou arraste aqui</p>
-                  <p class="text-xs text-slate-400 mt-0.5">O arquivo será salvo no seu OneDrive e vinculado automaticamente ao ticket</p>
-                </div>
-
-                <div id="fileSelectedInfo" class="hidden flex items-center justify-between bg-white border border-cmaa-primary/30 rounded-lg px-3.5 py-2.5 text-left">
-                  <div class="flex items-center gap-2.5 min-w-0">
-                    <svg class="w-5 h-5 text-cmaa-primary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
-                    </svg>
-                    <div class="truncate">
-                      <p id="selectedFileName" class="text-sm font-semibold text-slate-800 truncate"></p>
-                      <p id="selectedFileSize" class="text-xs text-slate-500"></p>
-                    </div>
-                  </div>
-                  <button id="btnRemoveFile" type="button" class="relative z-10 text-xs font-semibold text-red-600 hover:underline ml-3 cursor-pointer">
-                    Remover
-                  </button>
-                </div>
-              </div>
+              <input id="evidenciaAlias" type="text" placeholder="Ex.: print-erro.png"
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition" />
             </div>
 
-            <!-- Feedback / Status -->
-            <div id="statusBox" class="hidden rounded-xl p-3.5 text-sm"></div>
+            <div id="statusBox" class="hidden rounded-xl p-3.5 text-sm whitespace-pre-wrap"></div>
 
             <div class="pt-2 flex items-center justify-end gap-3">
               <button type="reset" id="btnLimpar"
@@ -281,7 +205,7 @@
               </button>
               <button id="btnSubmit" type="submit"
                 class="px-6 py-2.5 rounded-xl bg-cmaa-dark hover:bg-cmaa-primary text-white text-sm font-semibold shadow-sm transition flex items-center gap-2 cursor-pointer">
-                <span>Criar Ticket no Planner</span>
+                <span>Criar ticket no Planner</span>
               </button>
             </div>
           </form>
@@ -290,7 +214,6 @@
 
       <!-- ==================== ABA 2: CONSULTAR TICKETS ==================== -->
       <section id="viewConsulta" class="hidden space-y-6">
-        <!-- Barra de Filtros e Resumo -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -330,7 +253,6 @@
             </div>
           </div>
 
-          <!-- Cards de Contadores -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-4 border-t border-slate-100">
             <div class="bg-slate-50 rounded-xl p-3 border border-slate-200/60">
               <span class="text-xs text-slate-500 font-medium">Total</span>
@@ -351,7 +273,6 @@
           </div>
         </div>
 
-        <!-- Tabela / Lista de Tickets -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div id="ticketsLoading" class="hidden p-10 text-center text-sm text-slate-500">
             Carregando tickets do Microsoft Planner...
@@ -410,7 +331,7 @@
         </div>
 
         <div id="modalRefsContainer" class="hidden">
-          <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Anexos / Evidências</h4>
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Evidências / Links</h4>
           <ul id="modalRefsList" class="space-y-1.5"></ul>
         </div>
       </div>
@@ -430,8 +351,7 @@
       tenantId: "ca4b9034-c4ac-4ca2-b97e-1e57700b0d20",
       planId: "b1bp08s0JUOBqf6letyihmQAAEPh",
       redirectUri: window.location.origin + window.location.pathname,
-      // Files.ReadWrite necessário para enviar o anexo selecionado ao OneDrive e vincular no Planner
-      scopes: ["Tasks.ReadWrite", "Group.Read.All", "Files.ReadWrite"]
+      scopes: ["Tasks.ReadWrite", "Group.Read.All"]
     };
 
     const msalInstance = new msal.PublicClientApplication({
@@ -447,7 +367,6 @@
     let bucketsMap = {};
     let allTasks = [];
 
-    // Elementos DOM
     const loginScreen = document.getElementById("loginScreen");
     const appShell = document.getElementById("appShell");
     const loginStatus = document.getElementById("loginStatus");
@@ -455,9 +374,7 @@
     const formEl = document.getElementById("chamadoForm");
     const bucketSelect = document.getElementById("categoria");
     const filtroBucket = document.getElementById("filtroBucket");
-    const arquivoInput = document.getElementById("arquivoInput");
 
-    // ==================== AUTENTICAÇÃO ====================
     async function getToken() {
       const req = { scopes: CONFIG.scopes, account: activeAccount };
       try {
@@ -472,19 +389,14 @@
 
     async function graphFetch(url, options = {}) {
       const token = await getToken();
-      const headers = {
-        "Authorization": `Bearer ${token}`,
-        ...(options.headers || {})
-      };
-      if (!options.isBinary && !headers["Content-Type"]) {
-        headers["Content-Type"] = "application/json";
-      }
-
       const resp = await fetch(`https://graph.microsoft.com/v1.0${url}`, {
         ...options,
-        headers
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
       });
-
       if (!resp.ok) {
         const errText = await resp.text();
         throw new Error(`Graph ${resp.status}: ${errText}`);
@@ -503,7 +415,6 @@
       await carregarBuckets();
     }
 
-    // Verifica se já existe sessão ativa no sessionStorage
     (async () => {
       const accounts = msalInstance.getAllAccounts();
       if (accounts.length > 0) {
@@ -531,7 +442,6 @@
       window.location.reload();
     });
 
-    // ==================== NAVEGAÇÃO ENTRE TELAS ====================
     const tabNovo = document.getElementById("tabNovo");
     const tabConsulta = document.getElementById("tabConsulta");
     const viewNovo = document.getElementById("viewNovo");
@@ -555,7 +465,6 @@
     tabNovo.addEventListener("click", () => ativarAba("novo"));
     tabConsulta.addEventListener("click", () => ativarAba("consulta"));
 
-    // ==================== BUCKETS (CATEGORIAS) ====================
     async function carregarBuckets() {
       const data = await graphFetch(`/planner/plans/${CONFIG.planId}/buckets`);
       bucketSelect.innerHTML = '<option value="">Selecione uma categoria...</option>';
@@ -577,71 +486,13 @@
       }
     }
 
-    // ==================== UPLOAD DE ARQUIVO LOCAL ====================
-    function formatBytes(bytes) {
-      if (bytes === 0) return "0 Bytes";
-      const k = 1024;
-      const sizes = ["Bytes", "KB", "MB", "GB"];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-    }
-
-    arquivoInput.addEventListener("change", () => {
-      const file = arquivoInput.files[0];
-      if (file) {
-        document.getElementById("dropPlaceholder").classList.add("hidden");
-        document.getElementById("fileSelectedInfo").classList.remove("hidden");
-        document.getElementById("selectedFileName").textContent = file.name;
-        document.getElementById("selectedFileSize").textContent = formatBytes(file.size);
-      }
-    });
-
-    function limparArquivo() {
-      arquivoInput.value = "";
-      document.getElementById("dropPlaceholder").classList.remove("hidden");
-      document.getElementById("fileSelectedInfo").classList.add("hidden");
-    }
-
-    document.getElementById("btnRemoveFile").addEventListener("click", (e) => {
-      e.stopPropagation();
-      limparArquivo();
-    });
-
-    document.getElementById("btnLimpar").addEventListener("click", () => {
-      limparArquivo();
-      statusBox.classList.add("hidden");
-    });
-
-    async function uploadArquivoParaOneDrive(file) {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const safeName = `${timestamp}_${file.name.replace(/[#%*:<>?/\\|]/g, "_")}`;
-      const uploadPath = `/me/drive/root:/Chamados_Planner/${encodeURIComponent(safeName)}:/content`;
-
-      const uploadedItem = await graphFetch(uploadPath, {
-        method: "PUT",
-        isBinary: true,
-        headers: { "Content-Type": file.type || "application/octet-stream" },
-        body: file
-      });
-
-      // Cria link de visualização na organização
-      const linkRes = await graphFetch(`/me/drive/items/${uploadedItem.id}/createLink`, {
-        method: "POST",
-        body: JSON.stringify({
-          type: "view",
-          scope: "organization"
-        })
-      });
-
-      return {
-        url: linkRes.link.webUrl,
-        name: file.name
-      };
-    }
-
-    // ==================== CRIAÇÃO DO CHAMADO ====================
     function showFeedback(type, msg) {
-      statusBox.classList.remove("hidden", "bg-emerald-50", "text-emerald-800", "border-emerald-200", "bg-red-50", "text-red-800", "border-red-200", "bg-blue-50", "text-blue-800", "border-blue-200");
+      statusBox.classList.remove(
+        "hidden",
+        "bg-emerald-50", "text-emerald-800", "border-emerald-200",
+        "bg-red-50", "text-red-800", "border-red-200",
+        "bg-blue-50", "text-blue-800", "border-blue-200"
+      );
       statusBox.classList.add("border");
 
       if (type === "success") {
@@ -654,6 +505,10 @@
       statusBox.textContent = msg;
     }
 
+    document.getElementById("btnLimpar").addEventListener("click", () => {
+      statusBox.classList.add("hidden");
+    });
+
     formEl.addEventListener("submit", async (ev) => {
       ev.preventDefault();
       const btnSubmit = document.getElementById("btnSubmit");
@@ -661,17 +516,8 @@
       btnSubmit.classList.add("opacity-60");
 
       try {
-        let anexoInfo = null;
-        const file = arquivoInput.files[0];
+        showFeedback("info", "Criando tarefa no Planner...");
 
-        if (file) {
-          showFeedback("info", `Enviando anexo "${file.name}" para o OneDrive...`);
-          anexoInfo = await uploadArquivoParaOneDrive(file);
-        }
-
-        showFeedback("info", "Registrando chamado no Microsoft Planner...");
-
-        // 1. Cria a task
         const task = await graphFetch("/planner/tasks", {
           method: "POST",
           body: JSON.stringify({
@@ -681,22 +527,22 @@
           })
         });
 
-        // 2. Obtém ETag dos detalhes
         const details = await graphFetch(`/planner/tasks/${task.id}/details`);
         const etag = details["@odata.etag"];
 
-        // 3. Atualiza descrição e referência do arquivo
         const patchBody = {
           description: document.getElementById("descricao").value.trim()
         };
 
-        if (anexoInfo) {
-          // O Graph exige codificação específica de caracteres especiais na chave de references
-          const encodedKey = encodeURIComponent(anexoInfo.url).replace(/\./g, "%2E");
+        const evUrl = document.getElementById("evidenciaUrl").value.trim();
+        const evAlias = document.getElementById("evidenciaAlias").value.trim() || "Evidência";
+
+        if (evUrl) {
+          const encodedKey = encodeURIComponent(evUrl);
           patchBody.references = {
             [encodedKey]: {
               "@odata.type": "#microsoft.graph.plannerExternalReference",
-              alias: anexoInfo.name,
+              alias: evAlias,
               type: "Other"
             }
           };
@@ -708,18 +554,16 @@
           body: JSON.stringify(patchBody)
         });
 
-        showFeedback("success", `Chamado criado com sucesso! Protocolo: ${task.id.slice(0, 8).toUpperCase()}`);
+        showFeedback("success", `Chamado criado com sucesso! ID da task: ${task.id}`);
         formEl.reset();
-        limparArquivo();
       } catch (e) {
-        showFeedback("error", "Falha ao criar chamado: " + e.message);
+        showFeedback("error", "Falha ao criar chamado:\n" + e.message);
       } finally {
         btnSubmit.disabled = false;
         btnSubmit.classList.remove("opacity-60");
       }
     });
 
-    // ==================== CONSULTA DE TICKETS ====================
     async function carregarTickets() {
       const loadingEl = document.getElementById("ticketsLoading");
       const bodyEl = document.getElementById("ticketsBody");
@@ -794,7 +638,6 @@
       for (const task of filtrados) {
         const tr = document.createElement("tr");
         tr.className = "hover:bg-slate-50/90 transition-colors";
-
         const bucketName = bucketsMap[task.bucketId] || "Sem categoria";
 
         tr.innerHTML = `
@@ -835,7 +678,6 @@
     document.getElementById("filtroBucket").addEventListener("change", renderizarTickets);
     document.getElementById("btnAtualizarTickets").addEventListener("click", carregarTickets);
 
-    // ==================== MODAL DE DETALHES ====================
     const detailModal = document.getElementById("detailModal");
 
     async function abrirDetalhesTicket(taskId) {
@@ -847,7 +689,7 @@
       document.getElementById("modalStatus").textContent =
         task.percentComplete === 100 ? "Concluído" : (task.percentComplete > 0 ? "Em andamento" : "Não iniciado");
       document.getElementById("modalDate").textContent = formatarData(task.createdDateTime);
-      document.getElementById("modalDesc").textContent = "Carregando detalhes...";
+      document.getElementById("modalDesc").textContent = "Carregando descrição...";
       document.getElementById("modalRefsContainer").classList.add("hidden");
       document.getElementById("modalRefsList").innerHTML = "";
 
@@ -863,7 +705,7 @@
           const listEl = document.getElementById("modalRefsList");
           keys.forEach(encodedUrl => {
             const url = decodeURIComponent(encodedUrl);
-            const alias = refs[encodedUrl].alias || "Abrir anexo";
+            const alias = refs[encodedUrl].alias || "Abrir evidência";
             const li = document.createElement("li");
             li.innerHTML = `
               <a href="${url}" target="_blank" rel="noopener noreferrer"
