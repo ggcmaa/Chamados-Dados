@@ -191,7 +191,7 @@
 
             <div class="rounded-xl border border-slate-200/90 bg-slate-50/70 p-3.5 md:col-span-2">
               <div class="flex items-center justify-between gap-2 mb-1.5">
-                <span class="font-bold text-slate-900 text-sm">Chamados (Rotina / Customizações)</span>
+                <span class="font-bold text-slate-900 text-sm">Projetos (Rotina / Customizações)</span>
                 <span class="px-2.5 py-0.5 rounded-full font-semibold bg-emerald-100 text-emerald-800">5 dias corridos</span>
               </div>
               <p class="text-slate-600 leading-relaxed">
@@ -772,14 +772,9 @@
           })
         });
 
-        let finalDescription = baseDescription;
-
         if (selectedFile) {
           showFeedback("info", `Enviando anexo "${selectedFile.name}" para a pasta de evidências...`);
-          const uploadInfo = await enviarEvidenciaParaPastaSharePoint(task.id, selectedFile);
-          const anexoResumo = `\n\nEvidência salva na pasta PBI-RH como: ${uploadInfo.fileName}` +
-            (uploadInfo.webUrl ? `\nLink: ${uploadInfo.webUrl}` : "");
-          finalDescription = `${baseDescription}${anexoResumo}`;
+          await enviarEvidenciaParaPastaSharePoint(task.id, selectedFile);
         }
 
         const details = await graphFetch(`/planner/tasks/${task.id}/details`);
@@ -789,7 +784,7 @@
           method: "PATCH",
           headers: { "If-Match": etag },
           body: JSON.stringify({
-            description: finalDescription,
+            description: baseDescription,
             previewType: "description"
           })
         });
