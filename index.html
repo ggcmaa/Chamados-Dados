@@ -170,30 +170,47 @@
                 class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition"></textarea>
             </div>
 
-            <div>
-              <label for="categoria" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Categoria (Bucket) <span class="text-red-500">*</span>
-              </label>
-              <select id="categoria" required
-                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition">
-                <option value="">Carregando categorias...</option>
-              </select>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="categoria" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                  Categoria (Bucket) <span class="text-red-500">*</span>
+                </label>
+                <select id="categoria" required
+                  class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition">
+                  <option value="">Carregando categorias...</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="prioridade" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                  Prioridade <span class="text-red-500">*</span>
+                </label>
+                <select id="prioridade" required
+                  class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition">
+                  <option value="1">Urgente</option>
+                  <option value="3">Importante</option>
+                  <option value="5" selected>Média</option>
+                  <option value="9">Baixa</option>
+                </select>
+              </div>
             </div>
 
+            <!-- Anexo de Evidência -->
             <div>
-              <label for="evidenciaUrl" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Evidência (URL do arquivo/print no SharePoint/OneDrive ou link)
+              <label for="evidenciaArquivo" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Evidência (Anexo)
               </label>
-              <input id="evidenciaUrl" type="url" placeholder="https://..."
-                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition" />
-            </div>
-
-            <div>
-              <label for="evidenciaAlias" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Nome da evidência
-              </label>
-              <input id="evidenciaAlias" type="text" placeholder="Ex.: print-erro.png"
-                class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition" />
+              <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50/70 p-4 transition hover:border-cmaa-primary">
+                <input id="evidenciaArquivo" type="file"
+                  accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.log,.zip"
+                  class="block w-full text-xs text-slate-600 file:mr-4 file:py-2 file:px-3.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cmaa-light file:text-cmaa-dark hover:file:bg-cmaa-primary/15 file:cursor-pointer cursor-pointer" />
+                <div class="mt-2 flex items-center justify-between text-[11px] text-slate-500">
+                  <span id="evidenciaInfo">Nenhum arquivo selecionado (opcional — máx. 25 MB).</span>
+                  <button id="btnRemoverAnexo" type="button" class="hidden text-red-600 hover:underline font-medium cursor-pointer">
+                    Remover
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div id="statusBox" class="hidden rounded-xl p-3.5 text-sm whitespace-pre-wrap"></div>
@@ -236,6 +253,15 @@
                 <option value="0">Não iniciado</option>
                 <option value="50">Em andamento</option>
                 <option value="100">Concluído</option>
+              </select>
+
+              <select id="filtroPrioridade"
+                class="py-2 px-3 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-cmaa-primary">
+                <option value="all">Todas as prioridades</option>
+                <option value="1">Urgente</option>
+                <option value="3">Importante</option>
+                <option value="5">Média</option>
+                <option value="9">Baixa</option>
               </select>
 
               <select id="filtroBucket"
@@ -288,6 +314,7 @@
                 <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                   <th class="py-3.5 px-5">Título do Chamado</th>
                   <th class="py-3.5 px-4">Categoria</th>
+                  <th class="py-3.5 px-4">Prioridade</th>
                   <th class="py-3.5 px-4">Status</th>
                   <th class="py-3.5 px-4">Criado em</th>
                   <th class="py-3.5 px-5 text-right">Ações</th>
@@ -307,7 +334,10 @@
       <div class="h-1.5 w-full cmaa-bar"></div>
       <div class="px-6 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
         <div>
-          <span id="modalBucket" class="text-[11px] font-semibold uppercase tracking-wider text-cmaa-primary bg-cmaa-light px-2.5 py-0.5 rounded-full"></span>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="modalBucket" class="text-[11px] font-semibold uppercase tracking-wider text-cmaa-primary bg-cmaa-light px-2.5 py-0.5 rounded-full"></span>
+            <span id="modalPriorityBadge"></span>
+          </div>
           <h3 id="modalTitle" class="text-base font-bold text-slate-900 mt-2"></h3>
         </div>
         <button id="btnCloseModal" type="button" class="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
@@ -331,7 +361,7 @@
         </div>
 
         <div id="modalRefsContainer" class="hidden">
-          <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Evidências / Links</h4>
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Evidências / Anexos</h4>
           <ul id="modalRefsList" class="space-y-1.5"></ul>
         </div>
       </div>
@@ -351,7 +381,9 @@
       tenantId: "ca4b9034-c4ac-4ca2-b97e-1e57700b0d20",
       planId: "b1bp08s0JUOBqf6letyihmQAAEPh",
       redirectUri: window.location.origin + window.location.pathname,
-      scopes: ["Tasks.ReadWrite", "Group.Read.All"]
+      scopes: ["Tasks.ReadWrite", "Group.Read.All"],
+      uploadScopes: ["Tasks.ReadWrite", "Group.Read.All", "Files.ReadWrite"],
+      maxFileSizeBytes: 25 * 1024 * 1024
     };
 
     const msalInstance = new msal.PublicClientApplication({
@@ -374,10 +406,15 @@
     const statusBox = document.getElementById("statusBox");
     const formEl = document.getElementById("chamadoForm");
     const bucketSelect = document.getElementById("categoria");
+    const prioridadeSelect = document.getElementById("prioridade");
     const filtroBucket = document.getElementById("filtroBucket");
+    const filtroPrioridade = document.getElementById("filtroPrioridade");
+    const evidenciaInput = document.getElementById("evidenciaArquivo");
+    const evidenciaInfo = document.getElementById("evidenciaInfo");
+    const btnRemoverAnexo = document.getElementById("btnRemoverAnexo");
 
-    async function getToken() {
-      const req = { scopes: CONFIG.scopes, account: activeAccount };
+    async function getToken(scopes = CONFIG.scopes) {
+      const req = { scopes, account: activeAccount };
       try {
         const res = await msalInstance.acquireTokenSilent(req);
         return res.accessToken;
@@ -388,19 +425,25 @@
       }
     }
 
-    async function graphFetch(url, options = {}) {
-      const token = await getToken();
+    async function graphFetch(url, options = {}, scopes = CONFIG.scopes) {
+      const token = await getToken(scopes);
+      const isBinary = options.body instanceof Blob || options.body instanceof ArrayBuffer || ArrayBuffer.isView(options.body);
+      const headers = {
+        "Authorization": `Bearer ${token}`,
+        ...(isBinary ? {} : { "Content-Type": "application/json" }),
+        ...(options.headers || {})
+      };
+
       const resp = await fetch(`https://graph.microsoft.com/v1.0${url}`, {
         ...options,
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-          ...(options.headers || {})
-        }
+        headers
       });
       if (!resp.ok) {
         const errText = await resp.text();
-        throw new Error(`Graph ${resp.status}: ${errText}`);
+        const err = new Error(`Graph ${resp.status}: ${errText}`);
+        err.status = resp.status;
+        err.bodyText = errText;
+        throw err;
       }
       return resp.status === 204 ? null : resp.json();
     }
@@ -444,6 +487,38 @@
     document.getElementById("btnLogout").addEventListener("click", () => {
       sessionStorage.clear();
       window.location.reload();
+    });
+
+    function formatarTamanho(bytes) {
+      if (!bytes && bytes !== 0) return "";
+      if (bytes < 1024) return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    }
+
+    evidenciaInput.addEventListener("change", () => {
+      const file = evidenciaInput.files && evidenciaInput.files[0];
+      if (!file) {
+        evidenciaInfo.textContent = "Nenhum arquivo selecionado (opcional — máx. 25 MB).";
+        btnRemoverAnexo.classList.add("hidden");
+        return;
+      }
+
+      if (file.size > CONFIG.maxFileSizeBytes) {
+        evidenciaInput.value = "";
+        evidenciaInfo.textContent = "Arquivo excede o limite de 25 MB. Selecione outro arquivo.";
+        btnRemoverAnexo.classList.add("hidden");
+        return;
+      }
+
+      evidenciaInfo.textContent = `${file.name} (${formatarTamanho(file.size)})`;
+      btnRemoverAnexo.classList.remove("hidden");
+    });
+
+    btnRemoverAnexo.addEventListener("click", () => {
+      evidenciaInput.value = "";
+      evidenciaInfo.textContent = "Nenhum arquivo selecionado (opcional — máx. 25 MB).";
+      btnRemoverAnexo.classList.add("hidden");
     });
 
     const tabNovo = document.getElementById("tabNovo");
@@ -495,7 +570,8 @@
         "hidden",
         "bg-emerald-50", "text-emerald-800", "border-emerald-200",
         "bg-red-50", "text-red-800", "border-red-200",
-        "bg-blue-50", "text-blue-800", "border-blue-200"
+        "bg-blue-50", "text-blue-800", "border-blue-200",
+        "bg-amber-50", "text-amber-800", "border-amber-200"
       );
       statusBox.classList.add("border");
 
@@ -503,6 +579,8 @@
         statusBox.classList.add("bg-emerald-50", "text-emerald-800", "border-emerald-200");
       } else if (type === "error") {
         statusBox.classList.add("bg-red-50", "text-red-800", "border-red-200");
+      } else if (type === "warning") {
+        statusBox.classList.add("bg-amber-50", "text-amber-800", "border-amber-200");
       } else {
         statusBox.classList.add("bg-blue-50", "text-blue-800", "border-blue-200");
       }
@@ -511,13 +589,57 @@
 
     document.getElementById("btnLimpar").addEventListener("click", () => {
       statusBox.classList.add("hidden");
+      evidenciaInfo.textContent = "Nenhum arquivo selecionado (opcional — máx. 25 MB).";
+      btnRemoverAnexo.classList.add("hidden");
     });
+
+    async function enviarEvidenciaAnexo(taskId, file) {
+      const safeName = file.name.replace(/[^\w.\- ()]/g, "_");
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const drivePath = `/me/drive/root:/Evidencias_Chamados/${timestamp}_${safeName}:/content`;
+
+      const uploadedItem = await graphFetch(drivePath, {
+        method: "PUT",
+        body: file,
+        headers: {
+          "Content-Type": file.type || "application/octet-stream"
+        }
+      }, CONFIG.uploadScopes);
+
+      const webUrl = uploadedItem.webUrl;
+      if (!webUrl) {
+        throw new Error("Arquivo enviado ao drive, mas webUrl não foi retornado.");
+      }
+
+      const details = await graphFetch(`/planner/tasks/${taskId}/details`);
+      const etag = details["@odata.etag"];
+      const encodedKey = encodeURIComponent(webUrl);
+
+      await graphFetch(`/planner/tasks/${taskId}/details`, {
+        method: "PATCH",
+        headers: { "If-Match": etag },
+        body: JSON.stringify({
+          references: {
+            [encodedKey]: {
+              "@odata.type": "#microsoft.graph.plannerExternalReference",
+              alias: file.name,
+              type: "Other"
+            }
+          }
+        })
+      });
+
+      return webUrl;
+    }
 
     formEl.addEventListener("submit", async (ev) => {
       ev.preventDefault();
       const btnSubmit = document.getElementById("btnSubmit");
       btnSubmit.disabled = true;
       btnSubmit.classList.add("opacity-60");
+
+      const selectedFile = evidenciaInput.files && evidenciaInput.files[0] ? evidenciaInput.files[0] : null;
+      const priorityValue = Number(prioridadeSelect.value) || 5;
 
       try {
         showFeedback("info", "Criando tarefa no Planner...");
@@ -527,39 +649,42 @@
           body: JSON.stringify({
             planId: CONFIG.planId,
             bucketId: bucketSelect.value,
-            title: document.getElementById("titulo").value.trim()
+            title: document.getElementById("titulo").value.trim(),
+            priority: priorityValue
           })
         });
 
         const details = await graphFetch(`/planner/tasks/${task.id}/details`);
         const etag = details["@odata.etag"];
 
-        const patchBody = {
-          description: document.getElementById("descricao").value.trim()
-        };
-
-        const evUrl = document.getElementById("evidenciaUrl").value.trim();
-        const evAlias = document.getElementById("evidenciaAlias").value.trim() || "Evidência";
-
-        if (evUrl) {
-          const encodedKey = encodeURIComponent(evUrl);
-          patchBody.references = {
-            [encodedKey]: {
-              "@odata.type": "#microsoft.graph.plannerExternalReference",
-              alias: evAlias,
-              type: "Other"
-            }
-          };
-        }
-
         await graphFetch(`/planner/tasks/${task.id}/details`, {
           method: "PATCH",
           headers: { "If-Match": etag },
-          body: JSON.stringify(patchBody)
+          body: JSON.stringify({
+            description: document.getElementById("descricao").value.trim()
+          })
         });
 
-        showFeedback("success", `Chamado criado com sucesso! ID da task: ${task.id}`);
+        let anexoAviso = "";
+        if (selectedFile) {
+          showFeedback("info", `Enviando anexo "${selectedFile.name}" e vinculando ao ticket...`);
+          try {
+            await enviarEvidenciaAnexo(task.id, selectedFile);
+          } catch (uploadErr) {
+            anexoAviso = `\n\nAtenção: O chamado foi criado, mas o anexo não pôde ser enviado automaticamente (verifique com o TI a permissão Files.ReadWrite no Entra ID): ${uploadErr.message}`;
+          }
+        }
+
         formEl.reset();
+        prioridadeSelect.value = "5";
+        evidenciaInfo.textContent = "Nenhum arquivo selecionado (opcional — máx. 25 MB).";
+        btnRemoverAnexo.classList.add("hidden");
+
+        if (anexoAviso) {
+          showFeedback("warning", `Chamado criado com sucesso! ID da task: ${task.id}${anexoAviso}`);
+        } else {
+          showFeedback("success", `Chamado criado com sucesso! ID da task: ${task.id}`);
+        }
       } catch (e) {
         showFeedback("error", "Falha ao criar chamado:\n" + e.message);
       } finally {
@@ -601,6 +726,36 @@
       document.getElementById("statConcluido").textContent = tasks.filter(t => t.percentComplete === 100).length;
     }
 
+    function getPriorityMeta(priority) {
+      const p = Number(priority);
+      if (p === 1) {
+        return {
+          key: "1",
+          label: "Urgente",
+          badge: '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">Urgente</span>'
+        };
+      }
+      if (p >= 2 && p <= 3) {
+        return {
+          key: "3",
+          label: "Importante",
+          badge: '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">Importante</span>'
+        };
+      }
+      if (p >= 7) {
+        return {
+          key: "9",
+          label: "Baixa",
+          badge: '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">Baixa</span>'
+        };
+      }
+      return {
+        key: "5",
+        label: "Média",
+        badge: '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-sky-100 text-sky-800">Média</span>'
+      };
+    }
+
     function getStatusBadge(percent) {
       if (percent === 100) {
         return '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Concluído</span>';
@@ -621,6 +776,7 @@
     function renderizarTickets() {
       const busca = document.getElementById("filtroBusca").value.toLowerCase().trim();
       const status = document.getElementById("filtroStatus").value;
+      const prioridade = filtroPrioridade.value;
       const bucket = document.getElementById("filtroBucket").value;
       const bodyEl = document.getElementById("ticketsBody");
       const emptyEl = document.getElementById("ticketsEmpty");
@@ -628,11 +784,13 @@
       const filtrados = allTasks.filter(t => {
         const matchBusca = !busca || (t.title || "").toLowerCase().includes(busca);
         const matchBucket = bucket === "all" || t.bucketId === bucket;
+        const prioMeta = getPriorityMeta(t.priority);
+        const matchPrioridade = prioridade === "all" || prioMeta.key === prioridade;
         let matchStatus = true;
         if (status === "0") matchStatus = t.percentComplete === 0;
         if (status === "50") matchStatus = t.percentComplete > 0 && t.percentComplete < 100;
         if (status === "100") matchStatus = t.percentComplete === 100;
-        return matchBusca && matchBucket && matchStatus;
+        return matchBusca && matchBucket && matchPrioridade && matchStatus;
       });
 
       bodyEl.innerHTML = "";
@@ -647,6 +805,7 @@
         const tr = document.createElement("tr");
         tr.className = "hover:bg-slate-50/90 transition-colors";
         const bucketName = bucketsMap[task.bucketId] || "Sem categoria";
+        const prioMeta = getPriorityMeta(task.priority);
 
         tr.innerHTML = `
           <td class="py-3.5 px-5 font-medium text-slate-900">
@@ -658,6 +817,7 @@
               ${escapeHtml(bucketName)}
             </span>
           </td>
+          <td class="py-3.5 px-4">${prioMeta.badge}</td>
           <td class="py-3.5 px-4">${getStatusBadge(task.percentComplete)}</td>
           <td class="py-3.5 px-4 text-xs text-slate-500">${formatarData(task.createdDateTime)}</td>
           <td class="py-3.5 px-5 text-right">
@@ -683,6 +843,7 @@
 
     document.getElementById("filtroBusca").addEventListener("input", renderizarTickets);
     document.getElementById("filtroStatus").addEventListener("change", renderizarTickets);
+    filtroPrioridade.addEventListener("change", renderizarTickets);
     document.getElementById("filtroBucket").addEventListener("change", renderizarTickets);
     document.getElementById("btnAtualizarTickets").addEventListener("click", carregarTickets);
 
@@ -692,7 +853,9 @@
       const task = allTasks.find(t => t.id === taskId);
       if (!task) return;
 
+      const prioMeta = getPriorityMeta(task.priority);
       document.getElementById("modalBucket").textContent = bucketsMap[task.bucketId] || "Categoria";
+      document.getElementById("modalPriorityBadge").innerHTML = prioMeta.badge;
       document.getElementById("modalTitle").textContent = task.title;
       document.getElementById("modalStatus").textContent =
         task.percentComplete === 100 ? "Concluído" : (task.percentComplete > 0 ? "Em andamento" : "Não iniciado");
