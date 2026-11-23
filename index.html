@@ -296,8 +296,13 @@
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h2 class="text-lg font-bold text-slate-900">Meus Tickets</h2>
-              <p class="text-xs text-slate-500 mt-0.5">Exibindo apenas os chamados criados por você.</p>
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h2 id="ticketsHeading" class="text-lg font-bold text-slate-900">Meus Tickets</h2>
+                <span id="ownerBadge" class="hidden inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cmaa-light text-cmaa-dark border border-cmaa-primary/25">
+                  Proprietário da Equipe — Todos os Tickets
+                </span>
+              </div>
+              <p id="ticketsSubtitle" class="text-xs text-slate-500 mt-0.5">Exibindo apenas os chamados criados por você.</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2.5">
@@ -363,11 +368,11 @@
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div id="ticketsLoading" class="hidden p-10 text-center text-sm text-slate-500">
-            Carregando seus tickets do Microsoft Planner...
+            Carregando tickets do Microsoft Planner...
           </div>
 
           <div id="ticketsEmpty" class="hidden p-10 text-center text-sm text-slate-500">
-            Nenhum ticket criado por você foi encontrado para os filtros selecionados.
+            Nenhum ticket encontrado para os filtros selecionados.
           </div>
 
           <div class="overflow-x-auto">
@@ -460,6 +465,7 @@
 
     let activeAccount = null;
     let currentUserId = null;
+    let isPlanOwner = false;
     let bucketsMap = {};
     let allTasks = [];
 
@@ -511,10 +517,44 @@
       return resp.status === 204 ? null : resp.json();
     }
 
+    async function verificarSeEhProprietarioDoPlano() {
+      if (!currentUserId) return false;
+      try {
+        const plan = await graphFetch(`/planner/plans/${CONFIG.planId}?$select=id,owner`);
+        const groupId = plan?.owner;
+        if (!groupId) return false;
+
+        const ownersResp = await graphFetch(`/groups/${groupId}/owners?$select=id`);
+        const owners = ownersResp?.value || [];
+        return owners.some(o => o.id === currentUserId);
+      } catch (e) {
+        console.warn("Não foi possível verificar proprietários do grupo do plano:", e);
+        return false;
+      }
+    }
+
+    function atualizarCabecalhoConsulta() {
+      const headingEl = document.getElementById("ticketsHeading");
+      const subtitleEl = document.getElementById("ticketsSubtitle");
+      const badgeEl = document.getElementById("ownerBadge");
+
+      if (isPlanOwner) {
+        headingEl.textContent = "Todos os Tickets";
+        subtitleEl.textContent = "Visualizando todos os chamados do plano (acesso de proprietário da equipe).";
+        badgeEl.classList.remove("hidden");
+      } else {
+        headingEl.textContent = "Meus Tickets";
+        subtitleEl.textContent = "Exibindo apenas os chamados criados por você.";
+        badgeEl.classList.add("hidden");
+      }
+    }
+
     async function inicializarSessao(account) {
       activeAccount = account;
       const me = await graphFetch("/me?$select=id,displayName,mail,userPrincipalName");
       currentUserId = me.id;
+      isPlanOwner = await verificarSeEhProprietarioDoPlano();
+      atualizarCabecalhoConsulta();
 
       document.getElementById("userName").textContent = me.displayName || account.name || "Colaborador CMAA";
       document.getElementById("userEmail").textContent = me.mail || me.userPrincipalName || account.username || "";
@@ -742,7 +782,6 @@
           finalDescription = `${baseDescription}${anexoResumo}`;
         }
 
-        // Grava no campo Anotações (description) do Planner e define previewType como description
         const details = await graphFetch(`/planner/tasks/${task.id}/details`);
         const etag = details["@odata.etag"];
 
@@ -782,12 +821,18 @@
       bodyEl.innerHTML = "";
 
       try {
-        const data = await graphFetch(`/planner/plans/${CONFIG.planId}/tasks`);
-        const minhasTasks = (data.value || []).filter(
-          t => currentUserId && t.createdBy && t.createdBy.user && t.createdBy.user.id === currentUserId
-        );
+        isPlanOwner = await verificarSeEhProprietarioDoPlano();
+        atualizarCabecalhoConsulta();
 
-        allTasks = minhasTasks.sort((a, b) => new Date(b.createdDateTime) - new Date(a.createdDateTime));
+        const data = await graphFetch(`/planner/plans/${CONFIG.planId}/tasks`);
+        const todasTasks = data.value || [];
+        const tasksVisiveis = isPlanOwner
+          ? todasTasks
+          : todasTasks.filter(
+              t => currentUserId && t.createdBy && t.createdBy.user && t.createdBy.user.id === currentUserId
+            );
+
+        allTasks = tasksVisiveis.sort((a, b) => new Date(b.createdDateTime) - new Date(a.createdDateTime));
         atualizarContadores(allTasks);
         renderizarTickets();
       } catch (e) {
