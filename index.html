@@ -93,7 +93,7 @@
           <div class="hidden md:block h-8 w-px bg-slate-200"></div>
           <div class="hidden md:block">
             <span class="text-sm font-bold text-slate-800 block leading-tight">Central de Chamados</span>
-            <span class="text-xs text-cmaa-primary font-medium">Gente &amp; Gestão / TI</span>
+            <span class="text-xs text-cmaa-primary font-medium">Dados do RH — Gente &amp; Gestão</span>
           </div>
         </div>
 
@@ -132,7 +132,76 @@
     <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
 
       <!-- ==================== ABA 1: ABRIR CHAMADO ==================== -->
-      <section id="viewNovo" class="max-w-2xl mx-auto">
+      <section id="viewNovo" class="max-w-3xl mx-auto space-y-6">
+
+        <!-- Cabeçalho de Orientações sobre os Tipos de Chamados -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="px-6 py-4 bg-cmaa-dark text-white flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <svg class="w-5 h-5 text-cmaa-lime shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <div>
+                <h2 class="text-sm sm:text-base font-bold leading-tight">Orientações sobre os Tipos de Chamados e Prazos</h2>
+                <p class="text-xs text-emerald-100/90 mt-0.5">Consulte o enquadramento correto antes de registrar sua solicitação.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-5 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
+            <div class="rounded-xl border border-slate-200/90 bg-slate-50/70 p-3.5">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="font-bold text-slate-900 text-sm">GEROT</span>
+                <span class="px-2.5 py-0.5 rounded-full font-semibold bg-cmaa-light text-cmaa-dark border border-cmaa-primary/20">10 dias corridos</span>
+              </div>
+              <p class="text-slate-600 leading-relaxed">
+                São chamados que têm origem nas reuniões de gestão de rotina do RH.
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-slate-200/90 bg-slate-50/70 p-3.5">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="font-bold text-slate-900 text-sm">Dúvidas</span>
+                <span class="px-2.5 py-0.5 rounded-full font-semibold bg-sky-100 text-sky-800">2 dias corridos</span>
+              </div>
+              <p class="text-slate-600 leading-relaxed">
+                São chamados em que ainda não se sabe se é possível criar; serão avaliados e será retornado ao cliente uma análise técnica.
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-slate-200/90 bg-slate-50/70 p-3.5">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="font-bold text-slate-900 text-sm">Problemas</span>
+                <span class="px-2.5 py-0.5 rounded-full font-semibold bg-amber-100 text-amber-800">2 dias corridos</span>
+              </div>
+              <p class="text-slate-600 leading-relaxed">
+                São chamados onde o BI, relatório ou fluxo automático está em desacordo com o funcionamento previsto no seu desenvolvimento.
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-slate-200/90 bg-slate-50/70 p-3.5">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="font-bold text-slate-900 text-sm">Projetos (Novos)</span>
+                <span class="px-2.5 py-0.5 rounded-full font-semibold bg-cmaa-light text-cmaa-dark border border-cmaa-primary/20">10 dias corridos</span>
+              </div>
+              <p class="text-slate-600 leading-relaxed">
+                São chamados de criação de algo novo, como um BI, Fluxo, tela no Sênior, relatórios, entre outros.
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-slate-200/90 bg-slate-50/70 p-3.5 md:col-span-2">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="font-bold text-slate-900 text-sm">Projetos (Rotina / Customizações)</span>
+                <span class="px-2.5 py-0.5 rounded-full font-semibold bg-emerald-100 text-emerald-800">5 dias corridos</span>
+              </div>
+              <p class="text-slate-600 leading-relaxed">
+                São chamados de rotina, customização de itens já existentes ou revisão de algum ponto que ficou faltando em um projeto já criado.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulário de Abertura -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div class="px-6 py-5 border-b border-slate-100 bg-cmaa-light/60 flex items-center justify-between">
             <div>
@@ -151,23 +220,23 @@
                 Título do chamado <span class="text-red-500">*</span>
               </label>
               <input id="titulo" type="text" required
-                placeholder="Ex.: Erro ao acessar sistema financeiro"
+                placeholder="Ex.: Erro ao atualizar painel de indicadores"
                 class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition" />
             </div>
 
             <div>
               <label for="descricao" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Descrição <span class="text-red-500">*</span>
+                Descrição / Anotações <span class="text-red-500">*</span>
               </label>
               <textarea id="descricao" rows="4" required
-                placeholder="Detalhe o problema ocorrido..."
+                placeholder="Detalhe sua solicitação (será salva no campo Anotações do Planner)..."
                 class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition"></textarea>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="categoria" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                  Categoria (Bucket) <span class="text-red-500">*</span>
+                  Tipo de Chamado (Bucket) <span class="text-red-500">*</span>
                 </label>
                 <select id="categoria" required
                   class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-cmaa-primary focus:border-cmaa-primary transition">
@@ -347,9 +416,9 @@
         </div>
 
         <div>
-          <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Descrição</h4>
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Anotações / Descrição</h4>
           <div id="modalDesc" class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-slate-700 whitespace-pre-wrap max-h-48 overflow-y-auto">
-            Carregando descrição...
+            Carregando anotações...
           </div>
         </div>
 
@@ -664,16 +733,16 @@
         });
 
         let finalDescription = baseDescription;
-        let anexoResumo = "";
 
         if (selectedFile) {
           showFeedback("info", `Enviando anexo "${selectedFile.name}" para a pasta de evidências...`);
           const uploadInfo = await enviarEvidenciaParaPastaSharePoint(task.id, selectedFile);
-          anexoResumo = `\n\nEvidência salva na pasta PBI-RH como: ${uploadInfo.fileName}` +
+          const anexoResumo = `\n\nEvidência salva na pasta PBI-RH como: ${uploadInfo.fileName}` +
             (uploadInfo.webUrl ? `\nLink: ${uploadInfo.webUrl}` : "");
           finalDescription = `${baseDescription}${anexoResumo}`;
         }
 
+        // Grava no campo Anotações (description) do Planner e define previewType como description
         const details = await graphFetch(`/planner/tasks/${task.id}/details`);
         const etag = details["@odata.etag"];
 
@@ -681,7 +750,8 @@
           method: "PATCH",
           headers: { "If-Match": etag },
           body: JSON.stringify({
-            description: finalDescription
+            description: finalDescription,
+            previewType: "description"
           })
         });
 
@@ -692,8 +762,7 @@
 
         showFeedback(
           "success",
-          `Chamado criado com sucesso! ID da task: ${task.id}` +
-          (selectedFile ? `\nEvidência gravada na pasta compartilhada com o nome ${task.id}${getFileExtension(selectedFile.name)}.` : "")
+          `Seu chamado foi enviado para avaliação da área de Dados do RH, estando sujeito a aprovação, você será notificado via Teams\n\nProtocolo: ${task.id}`
         );
       } catch (e) {
         showFeedback("error", "Falha ao criar chamado:\n" + e.message);
@@ -870,7 +939,7 @@
       document.getElementById("modalStatus").textContent =
         task.percentComplete === 100 ? "Concluído" : (task.percentComplete > 0 ? "Em andamento" : "Não iniciado");
       document.getElementById("modalDate").textContent = formatarData(task.createdDateTime);
-      document.getElementById("modalDesc").textContent = "Carregando descrição...";
+      document.getElementById("modalDesc").textContent = "Carregando anotações...";
       document.getElementById("modalRefsContainer").classList.add("hidden");
       document.getElementById("modalRefsList").innerHTML = "";
 
@@ -878,7 +947,7 @@
 
       try {
         const details = await graphFetch(`/planner/tasks/${taskId}/details`);
-        document.getElementById("modalDesc").textContent = details.description || "Nenhuma descrição informada.";
+        document.getElementById("modalDesc").textContent = details.description || "Nenhuma anotação informada.";
       } catch (e) {
         document.getElementById("modalDesc").textContent = "Erro ao carregar detalhes: " + e.message;
       }
