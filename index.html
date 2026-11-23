@@ -620,8 +620,14 @@
         throw new Error("Arquivo enviado ao drive, mas webUrl não foi retornado.");
       }
 
-      // OData/Planner exige URL limpa como chave de references (sem encodeURIComponent, que gera %3A / %2F)
-      const referenceKey = webUrl;
+      // Remove query string (?sourcedoc=...&file=...&action=...) que causa erro no parser OData de references
+      let referenceKey = webUrl;
+      try {
+        const parsed = new URL(webUrl);
+        referenceKey = `${parsed.origin}${parsed.pathname}`;
+      } catch {
+        referenceKey = webUrl.split("?")[0];
+      }
 
       const details = await graphFetch(`/planner/tasks/${taskId}/details`);
       const etag = details["@odata.etag"];
@@ -640,7 +646,7 @@
         })
       });
 
-      return webUrl;
+      return referenceKey;
     }
 
     formEl.addEventListener("submit", async (ev) => {
